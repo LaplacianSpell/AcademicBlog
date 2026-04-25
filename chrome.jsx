@@ -7,12 +7,11 @@ function TopNav({ route, onGo }) {
     { id: "research", label: "Research" },
     { id: "pubs",     label: "Publications" },
     { id: "notes",    label: "Notes" },
-    { id: "home",     label: "Blog" },
   ];
   return (
     <header className="topnav">
-      <button className="brand" onClick={() => onGo("home")}>
-        <span className="cap">D</span>i&nbsp;Pan&nbsp;<span style={{color: "var(--ink-mute)", fontStyle: "normal", fontSize: 13, fontFamily: "var(--mono)", letterSpacing: "0.1em"}}>盘&nbsp;笛</span>
+      <button className="brand" onClick={() => onGo("about")}>
+        <span className="cap">D</span>i&nbsp;Pan
       </button>
       <nav className="crumbs">
         {items.map((it, i) => (
@@ -26,12 +25,19 @@ function TopNav({ route, onGo }) {
             </button>
           </React.Fragment>
         ))}
+        <span className="sep">/</span>
+        <a
+          href="https://laplacianspell.github.io/"
+          target="_blank"
+          rel="noopener"
+          style={{ color: "var(--ink-soft)", textDecoration: "none", fontSize: "inherit" }}
+        >Blog ↗</a>
       </nav>
     </header>
   );
 }
 
-function Identity({ onGo }) {
+function Identity() {
   return (
     <div className="identity">
       <div className="av">D</div>

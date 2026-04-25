@@ -11,39 +11,6 @@ function DropCapTitle({ text, size = 38 }) {
   );
 }
 
-const POSTS = [
-  { id: "p1", date: "2024-09-12", title: "Sth. about JieLabs",        tag: "JOURNAL" },
-  { id: "p2", date: "2024-08-03", title: "2024 — A Year in Quanta",   tag: "REFLECTION" },
-  { id: "p3", date: "2024-06-19", title: "Chisel3 踩坑实录",            tag: "NOTES" },
-  { id: "p4", date: "2024-05-04", title: "拼音排序 \\w JavaScript",     tag: "CODE" },
-  { id: "p5", date: "2024-03-22", title: "被记忆和普通的花所祝福",        tag: "PROSE" },
-  { id: "p6", date: "2024-02-08", title: "喵++",                       tag: "MISC" },
-];
-
-function HomePage({ onOpen, onTitleClick }) {
-  return (
-    <div className="page-enter">
-      <div className="eyebrow" style={{ fontFamily: "var(--mono)", fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-mute)", marginBottom: 24 }}>
-        Index / 文草
-      </div>
-      <h1 className="title-trigger" data-title="home" onClick={onTitleClick} style={{ fontFamily: "var(--serif)", fontWeight: 500, fontSize: 56, margin: "0 0 48px 0", lineHeight: 1.05 }}>
-        <span className="dropcap" style={{ color: "var(--accent)", fontStyle: "italic" }}>I</span>ndex
-      </h1>
-      <div className="post-list">
-        {POSTS.map(p => (
-          <div className="post-row" key={p.id} onClick={() => onOpen(p)}>
-            <div className="date">{p.date}</div>
-            <DropCapTitle text={p.title} />
-            <div className="meta-line">
-              <span className="tag">{p.tag}</span>
-              <span>· 8 min read</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 function AboutPage({ onTitleClick }) {
   return (
@@ -51,7 +18,7 @@ function AboutPage({ onTitleClick }) {
       <div className="eyebrow">About / 关于</div>
       <h1 className="title-trigger" data-title="about" onClick={onTitleClick}><span className="dropcap">A</span>bout me</h1>
       <p>
-        My name is Di Pan (潘迪), a Master’s student in Physics at the
+        My name is Di Pan, a Master’s student in Physics at the
         Swiss Federal Technology Institute of Lausanne (EPFL). I am deeply
         fascinated by the <span className="em">quantum origin of spacetime
         and gravity</span>, as well as the mathematical structures behind
@@ -462,4 +429,4 @@ function ResearchPage({ onTitleClick }) {
   );
 }
 
-Object.assign(window, { HomePage, AboutPage, ResearchPage, PubsPage, NotesPage, NoteAbstractPage, PostPage, POSTS, NOTES });
+Object.assign(window, { AboutPage, ResearchPage, PubsPage, NotesPage, NoteAbstractPage, NOTES });

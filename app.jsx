@@ -11,25 +11,33 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "serif": "Cormorant Garamond"
 }/*EDITMODE-END*/;
 
-const ROUTE_ORDER = ["about", "research", "pubs", "notes", "home"];
+const ROUTE_ORDER = ["about", "research", "pubs", "notes"];
+
+function parseHash() {
+  const raw = window.location.hash.replace(/^#/, "");
+  const [base, sub = null] = raw.split("/");
+  const route = ROUTE_ORDER.includes(base) ? base : "about";
+  return { route, sub };
+}
+
+function pushRoute(route, sub) {
+  const hash = sub ? `${route}/${sub}` : route;
+  window.location.hash = hash;
+}
 
 function App() {
   const tweaks = (window.useTweaks || ((d) => [d, () => {}]))(TWEAK_DEFAULTS);
   const [vals, setVal] = tweaks;
 
-  // About is now the default landing.
-  const [route, setRoute] = useState("about");
-  const [post, setPost] = useState(null);
-  const [note, setNote] = useState(null);
-  const [archive, setArchive] = useState(null); // notes archive filter (null = category index)
+  const [route, setRoute]   = useState(() => parseHash().route);
+  const [note, setNote]     = useState(null);
+  const [archive, setArchive] = useState(null);
   const [quoteIdx, setQuoteIdx] = useState(0);
   const [animating, setAnimating] = useState(false);
-  // Bump key on every route change so the page-enter CSS animation re-runs.
   const [pageKey, setPageKey] = useState(0);
-  // When true, the next-page mount should run the reform animation.
   const reformOnMountRef = useRef(false);
+  const animatingRef     = useRef(false);
 
-  // CSS variable overrides from tweaks
   useEffect(() => {
     const r = document.documentElement.style;
     r.setProperty("--accent", vals.accent);
@@ -37,56 +45,60 @@ function App() {
     r.setProperty("--serif", `"${vals.serif}", "EB Garamond", Georgia, serif`);
   }, [vals.accent, vals.blob, vals.serif]);
 
-  // After we change route, if a reform is pending, run it once the new title
-  // is in the DOM.
   useEffect(() => {
     if (reformOnMountRef.current && window.runTitleReform) {
       reformOnMountRef.current = false;
-      window.runTitleReform().then(() => setAnimating(false));
+      window.runTitleReform().then(() => {
+        setAnimating(false);
+        animatingRef.current = false;
+      });
     }
-  }, [route, post, pageKey]);
+  }, [route, pageKey]);
 
-  // Plain navigation (no FX) — used for clicks on nav and post tiles.
-  const goPlain = (r, p = null) => {
-    if (animating) return;
-    if (r === route && !p) return;
-    setRoute(r);
-    setPost(p);
-    setQuoteIdx(q => q + 1);
-    setPageKey(k => k + 1);
-    window.scrollTo({ top: 0, behavior: "instant" });
-  };
+  // hashchange is the single source of truth for all navigation
+  useEffect(() => {
+    function onHashChange() {
+      const { route: r, sub } = parseHash();
+      let restoredNote = null;
+      if (r === "notes" && sub) {
+        restoredNote = (window.NOTES || []).find(n => n.id === sub) || null;
+      }
+      setRoute(r);
+      setNote(restoredNote);
+      setArchive(!restoredNote && sub ? decodeURIComponent(sub) : null);
+      setQuoteIdx(q => q + 1);
+      setPageKey(k => k + 1);
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+    window.addEventListener("hashchange", onHashChange);
+    if (!window.location.hash) history.replaceState(null, "", "#about");
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
 
-  // Title-click navigation (with scatter → reform FX). Cycles to next route.
   const goWithFx = async (targetRoute) => {
-    if (animating) return;
+    if (animatingRef.current) return;
+    animatingRef.current = true;
     setAnimating(true);
-    if (window.runTitleScatter) {
-      await window.runTitleScatter();
-    }
-    setRoute(targetRoute);
-    setPost(null);
-    setQuoteIdx(q => q + 1);
-    setPageKey(k => k + 1);
+    if (window.runTitleScatter) await window.runTitleScatter();
     reformOnMountRef.current = true;
-    window.scrollTo({ top: 0, behavior: "instant" });
+    pushRoute(targetRoute);
   };
 
   const handleTitleClick = () => {
-    // Title click cycles to the next page in ROUTE_ORDER (skipping post view).
     const i = ROUTE_ORDER.indexOf(route);
-    const next = ROUTE_ORDER[(i + 1) % ROUTE_ORDER.length];
-    goWithFx(next);
+    goWithFx(ROUTE_ORDER[(i + 1) % ROUTE_ORDER.length]);
   };
 
-  // Keyboard nav
+  const openNote = (n) => pushRoute("notes", n.id);
+  const openArchive = (a) => a ? pushRoute("notes", encodeURIComponent(a)) : pushRoute("notes");
+
   useEffect(() => {
+    const map = { "1": "about", "2": "research", "3": "pubs", "4": "notes" };
     const onKey = (e) => {
       if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
-      if (animating) return;
-      const map = { "1": "about", "2": "home", "3": "pubs", "4": "notes" };
+      if (animatingRef.current) return;
       if (map[e.key]) { goWithFx(map[e.key]); return; }
-      if (e.key === "Escape" && route === "post") { goPlain("about"); return; }
+      if (e.key === "Escape") { window.history.back(); return; }
       if (e.key === "ArrowRight") {
         const i = ROUTE_ORDER.indexOf(route);
         if (i >= 0) goWithFx(ROUTE_ORDER[(i + 1) % ROUTE_ORDER.length]);
@@ -98,38 +110,35 @@ function App() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [route, animating]);
+  }, [route]);
 
   const routeIdx = useMemo(() => {
     const i = ROUTE_ORDER.indexOf(route);
     return i < 0 ? 1 : i + 1;
   }, [route]);
 
-  // Reset notes-archive sub-state whenever we leave the notes section.
-  useEffect(() => {
-    if (route !== "notes" && route !== "note") {
-      setArchive(null);
-      setNote(null);
-    }
-  }, [route]);
-
   let content;
-  if (route === "home")  content = <HomePage  onTitleClick={handleTitleClick} onOpen={(p) => goPlain("post", p)} />;
-  else if (route === "about") content = <AboutPage  onTitleClick={handleTitleClick} />;
-  else if (route === "research") content = <ResearchPage onTitleClick={handleTitleClick} />;
-  else if (route === "pubs")  content = <PubsPage   onTitleClick={handleTitleClick} />;
-  else if (route === "notes") content = <NotesPage  onTitleClick={handleTitleClick} archive={archive} setArchive={(a) => { setArchive(a); setPageKey(k => k+1); window.scrollTo({top:0, behavior:"instant"}); }} onOpen={(n) => { setNote(n); setRoute("note"); setPageKey(k => k+1); window.scrollTo({top:0, behavior:"instant"}); }} />;
-  else if (route === "note" && note) content = <NoteAbstractPage note={note} onBack={() => { setRoute("notes"); setNote(null); setPageKey(k => k+1); window.scrollTo({top:0, behavior:"instant"}); }} />;
-  else if (route === "post" && post) content = <PostPage post={post} onBack={() => goPlain("home")} />;
+  if (route === "about") {
+    content = <AboutPage onTitleClick={handleTitleClick} />;
+  } else if (route === "research") {
+    content = <ResearchPage onTitleClick={handleTitleClick} />;
+  } else if (route === "pubs") {
+    content = <PubsPage onTitleClick={handleTitleClick} />;
+  } else if (route === "notes") {
+    content = note
+      ? <NoteAbstractPage note={note} onBack={() => window.history.back()} />
+      : <NotesPage onTitleClick={handleTitleClick} archive={archive} setArchive={openArchive} onOpen={openNote} />;
+  } else {
+    content = <AboutPage onTitleClick={handleTitleClick} />;
+  }
 
-  // For the nav highlight: when in a post view, highlight nothing/home.
   return (
     <>
       {vals.showBlob && <Blobs />}
-      <TopNav route={route === "post" ? "home" : (route === "note" ? "notes" : route)} onGo={(r) => goWithFx(r)} />
+      <TopNav route={route} onGo={(r) => goWithFx(r)} />
       <main className="stage" key={pageKey}>{content}</main>
       <ScrollMark idx={routeIdx} total={ROUTE_ORDER.length} />
-      {vals.showIdentity && <Identity onGo={goPlain} />}
+      {vals.showIdentity && <Identity />}
       {vals.showQuote && <FooterQuote idx={quoteIdx} />}
       <KbdHint />
 
@@ -144,19 +153,13 @@ function App() {
               label="Serif family"
               value={vals.serif}
               onChange={(v) => setVal("serif", v)}
-              options={[
-                "Cormorant Garamond",
-                "EB Garamond",
-                "Source Serif Pro",
-                "Playfair Display",
-                "Lora",
-              ]}
+              options={["Cormorant Garamond","EB Garamond","Source Serif Pro","Playfair Display","Lora"]}
             />
           </window.TweakSection>
           <window.TweakSection label="Chrome">
-            <window.TweakToggle label="Pink corner blob"     value={vals.showBlob}     onChange={(v) => setVal("showBlob", v)} />
-            <window.TweakToggle label="Identity card"        value={vals.showIdentity} onChange={(v) => setVal("showIdentity", v)} />
-            <window.TweakToggle label="Footer quote"         value={vals.showQuote}    onChange={(v) => setVal("showQuote", v)} />
+            <window.TweakToggle label="Pink corner blob"  value={vals.showBlob}     onChange={(v) => setVal("showBlob", v)} />
+            <window.TweakToggle label="Identity card"     value={vals.showIdentity} onChange={(v) => setVal("showIdentity", v)} />
+            <window.TweakToggle label="Footer quote"      value={vals.showQuote}    onChange={(v) => setVal("showQuote", v)} />
           </window.TweakSection>
           <window.TweakSection label="Transition">
             <window.TweakButton label="Replay" onClick={() => handleTitleClick()}>↻ Cycle &amp; replay</window.TweakButton>
