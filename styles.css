@@ -765,3 +765,38 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .md-body table { width: 100%; border-collapse: collapse; font-size: 18px; margin: 32px 0; }
 .md-body td { padding: 10px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
 .md-body td:first-child { color: var(--ink-mute); width: 120px; }
+
+/* ── Notes sidebar layout ──────────────────────────────────────────────────── */
+.notes-layout {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.notes-sidebar {
+  position: sticky;
+  top: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+@media (max-width: 680px) {
+  .notes-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .notes-sidebar {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+}
