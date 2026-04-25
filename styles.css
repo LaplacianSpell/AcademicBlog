@@ -750,3 +750,18 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .identity { left: 16px; right: 16px; bottom: 16px; }
   .footer-quote, .scroll-mark, .kbd-hint { display: none; }
 }
+
+/* ── Markdown-rendered body ──────────────────────────────────────────────── */
+.md-body { font-family: var(--serif); font-size: 21px; line-height: 1.6; color: var(--ink); }
+.md-body p { margin: 0 0 24px 0; }
+.md-body h2 { font-family: var(--serif); font-size: 26px; font-weight: 500; margin: 48px 0 16px 0; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+.md-body h3 { font-family: var(--serif); font-size: 21px; font-weight: 500; margin: 32px 0 8px 0; color: var(--ink); }
+.md-body h3 + p { margin-top: 4px; }
+.md-body em { color: var(--accent); font-style: italic; }
+.md-body strong { font-weight: 600; color: var(--ink); }
+.md-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.md-body ul { padding-left: 1.4em; margin: 0 0 24px 0; }
+.md-body li { margin-bottom: 6px; }
+.md-body table { width: 100%; border-collapse: collapse; font-size: 18px; margin: 32px 0; }
+.md-body td { padding: 10px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.md-body td:first-child { color: var(--ink-mute); width: 120px; }
