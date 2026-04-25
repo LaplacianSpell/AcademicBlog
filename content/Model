@@ -1,0 +1,114 @@
+ 
+ Example to write 
+ {
+    "id": "n01",
+    "date": "2025-04-12",
+    "topic": "Quantum Gravity",
+    "title": "Schwarzian action, briefly",
+    "abstract": "A working sketch of how the Schwarzian derivative emerges as the boundary mode of nearly-AdS₂ gravity. We start from JT gravity in Euclidean signature, integrate out the bulk dilaton, and find the boundary action governs the reparametrisation mode of the asymptotic time circle. The one-loop exactness of the partition function is reviewed; matrix-model implications are deferred.",
+    "links": [
+      { "label": "Maldacena, Stanford, Yang (2016)", "href": "https://arxiv.org/abs/1606.01857", "kind": "ref" },
+      { "label": "PDF (handwritten)", "href": "#", "kind": "pdf" }
+    ]
+  }
+  ,{
+    "id": "n02",
+    "date": "2025-03-08",
+    "topic": "Holography",
+    "title": "Replica trick & wormholes",
+    "abstract": "Re-deriving the entropy formula from gravitational replicas. After the n→1 limit, the dominant saddle on the Rényi entropy diagram becomes a connected wormhole geometry rather than disconnected disks. This is the cleanest way to see the QES prescription falling out of a Euclidean path integral; we also touch on the role of replica wormholes in the Page curve.",
+    "links": [
+      { "label": "Penington, Shenker, Stanford, Yang (2019)", "href": "https://arxiv.org/abs/1911.11977", "kind": "ref" },
+      { "label": "Almheiri et al. (2019)", "href": "https://arxiv.org/abs/1911.12333", "kind": "ref" }
+    ]
+  },
+  {
+    "id": "n03",
+    "date": "2025-02-19",
+    "topic": "Quantum Info",
+    "title": "Modular Hamiltonians I can remember",
+    "abstract": "Why the modular Hamiltonian for a half-space in QFT is the boost generator (Bisognano–Wichmann), and how this generalises to spherical regions in CFT via conformal mapping. A short list of cases I keep forgetting — half-line, sphere, interval at finite temperature — with the precise statement and the geometric reason.",
+    "links": [
+      { "label": "Bisognano–Wichmann theorem", "href": "https://en.wikipedia.org/wiki/Bisognano%E2%80%93Wichmann_theorem", "kind": "ref" },
+      { "label": "Casini, Huerta (2009)", "href": "https://arxiv.org/abs/0903.5284", "kind": "ref" }
+    ]
+  },
+  {
+    "id": "n04",
+    "date": "2025-01-30",
+    "topic": "Quantum Gravity",
+    "title": "On the JT path integral",
+    "abstract": "Two takes on the matrix-model dual of JT gravity: the Saad–Shenker–Stanford genus expansion and the Mertens–Turiaci approach via Liouville. Which one is 'right'? Both — they capture different non-perturbative completions. A short note on why the genus expansion is asymptotic and what the matrix integral fixes.",
+    "links": [
+      { "label": "Saad, Shenker, Stanford (2019)", "href": "https://arxiv.org/abs/1903.11115", "kind": "ref" }
+    ]
+  },
+  {
+    "id": "n05",
+    "date": "2024-12-04",
+    "topic": "CFT",
+    "title": "Conformal blocks for the impatient",
+    "abstract": "Recursive definitions, Casimir equations, and a worked 4-point function in 2d. We derive the global block from SL(2,ℝ) representation theory, then upgrade to the Virasoro block via Zamolodchikov's recursion. A worked example: the identity block contribution to the heavy-light limit.",
+    "links": [
+      { "label": "Zamolodchikov (1984)", "href": "#", "kind": "ref" },
+      { "label": "Hartman lectures", "href": "https://www.hartmanhep.net/topics2015/", "kind": "ref" }
+    ]
+  },
+  {
+    "id": "n06",
+    "date": "2024-11-11",
+    "topic": "GR",
+    "title": "Edge modes & the area term",
+    "abstract": "Why the gravitational entropy is geometric — a bookkeeping argument. The boundary degrees of freedom localised at the entangling surface contribute the area term to the entanglement entropy; the bulk fields contribute the rest. This is just generalised entropy in slow motion.",
+    "links": [
+      { "label": "Donnelly, Wall (2014)", "href": "https://arxiv.org/abs/1412.1895", "kind": "ref" }
+    ]
+  },
+  {
+    "id": "n07",
+    "date": "2024-10-02",
+    "topic": "Quantum Gravity",
+    "title": "Extremal Kerr — what's so special",
+    "abstract": "The near-horizon geometry of extremal Kerr is a fibration of AdS₂ over S² with non-trivial U(1) bundle structure. The isometry enhancement to SL(2,ℝ)×U(1) is what powers the Kerr/CFT correspondence — but the boundary CFT is a chiral half, not a full 2d CFT. A re-derivation, slowly.",
+    "links": [
+      { "label": "Bardeen, Horowitz (1999)", "href": "https://arxiv.org/abs/hep-th/9905099", "kind": "ref" },
+      { "label": "Guica et al., Kerr/CFT (2008)", "href": "https://arxiv.org/abs/0809.4266", "kind": "ref" }
+    ]
+  },
+  {
+    "id": "n08",
+    "date": "2024-08-21",
+    "topic": "Quantum Info",
+    "title": "Subregion duality, three ways",
+    "abstract": "Entanglement wedge reconstruction stated as: bulk operators in the entanglement wedge of a boundary subregion can be reconstructed from boundary operators on that subregion. Three formulations — Petz map, modular flow, and the JLMS relation — and why they're equivalent at leading order in 1/N.",
+    "links": [
+      { "label": "Jafferis, Lewkowycz, Maldacena, Suh (2015)", "href": "https://arxiv.org/abs/1512.06431", "kind": "ref" }
+    ]
+  },
+  {
+    "id": "n09",
+    "date": "2024-07-04",
+    "topic": "Math",
+    "title": "Cohomology, but for the kitchen",
+    "abstract": "An attempt to explain de Rham cohomology to a non-physicist friend using the metaphor of a recipe and its variations. Closed forms = the dish; exact forms = a step that doesn't change the outcome; cohomology classes = recipes that produce the same dish modulo trivial rephrasings. Imperfect but stuck.",
+    "links": []
+  }
+
+
+
+Publication:
+//  {
+//     "title": "Comming Soon"
+//     "authors": ["D. Pan", "J. Penedones"],
+//     "venue": "In preparation · 2026",
+//     "status": "in prep",
+//     "links": []
+//   }
+  //, {
+  //   "title": "Zero Mode Corrections to the Kerr Black Hole Partition Function",
+  //   "authors": ["D. Pan", "W. Song"],
+  //   "venue": "In preparation · 2026",
+  //   "status": "in prep",
+  //   "links": []
+  // }
+

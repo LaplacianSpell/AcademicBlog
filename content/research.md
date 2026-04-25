@@ -1,6 +1,6 @@
 My research sits at the intersection of quantum gravity, holography, and lattice field theory.
 
-## Ongoing
+<!-- ## Ongoing
 
 ### Modified Villain Construction with Boundaries
 *with Prof. João Penedones (EPFL) · 2024–present*
@@ -17,8 +17,8 @@ We investigate quantum corrections arising from zero modes in the gravitational 
 ### Research Internship in Holography
 *with Prof. Mukund Rangamani (UC Davis) · Summer 2024*
 
-Research in holography and AdS/CFT at UC Davis.
+Research in BPS black at UC Davis. -->
 
-## Background
+<!-- ## Background
 
-Before these projects, I developed familiarity with: Euclidean quantum gravity and the gravitational path integral; 2d CFT and the Virasoro algebra; entanglement entropy and the Ryu–Takayanagi formula; JT gravity and its matrix-model dual; and the near-horizon geometry of extremal black holes. Reading notes on these topics are in the [Notes](#notes) section.
+Before these projects, I developed familiarity with: Euclidean quantum gravity and the gravitational path integral; 2d CFT and the Virasoro algebra; entanglement entropy and the Ryu–Takayanagi formula; JT gravity and its matrix-model dual; and the near-horizon geometry of extremal black holes. Reading notes on these topics are in the [Notes](#notes) section. -->
