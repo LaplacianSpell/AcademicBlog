@@ -15,11 +15,12 @@ from pathlib import Path
 PORT = 3000
 ROOT = Path(__file__).parent
 
-for arg in sys.argv[1:]:
-    if arg.startswith("--port="):
+args = sys.argv[1:]
+for i, arg in enumerate(args):
+    if arg == "--port" and i + 1 < len(args):
+        PORT = int(args[i + 1])
+    elif arg.startswith("--port="):
         PORT = int(arg.split("=")[1])
-    elif arg == "--port" and sys.argv.index(arg) + 1 < len(sys.argv):
-        PORT = int(sys.argv[sys.argv.index(arg) + 1])
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
@@ -34,26 +35,36 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         return super().guess_type(path)
 
     def log_message(self, format, *args):
-        # Show requests so you can see what's being fetched
-        print(f"  {args[0]}  {args[1]}")
+        print(f"  {args[1]}  {args[0]}")
+
+    def handle_error(self, request, client_address):
+        # Silence BrokenPipeError — browser closed connection early, harmless
+        import traceback
+        if "BrokenPipeError" not in traceback.format_exc():
+            super().handle_error(request, client_address)
+
+
+class Server(socketserver.TCPServer):
+    allow_reuse_address = True
+
+    def handle_error(self, request, client_address):
+        import traceback
+        if "BrokenPipeError" not in traceback.format_exc():
+            super().handle_error(request, client_address)
 
 
 if __name__ == "__main__":
     os.chdir(ROOT)
-
-    print(f"\n  ┌─────────────────────────────────────┐")
-    print(f"  │  AcademicBlog dev server             │")
-    print(f"  │                                     │")
-    print(f"  │  http://localhost:{PORT}               │")
-    print(f"  │                                     │")
-    print(f"  │  Ctrl+C to stop                     │")
-    print(f"  └─────────────────────────────────────┘\n")
-
-    class ReusableTCPServer(socketserver.TCPServer):
-        allow_reuse_address = True
+    print(f"\n  ┌──────────────────────────────────────┐")
+    print(f"  │  AcademicBlog dev server              │")
+    print(f"  │                                      │")
+    print(f"  │  http://localhost:{PORT}                │")
+    print(f"  │                                      │")
+    print(f"  │  Ctrl+C to stop                      │")
+    print(f"  └──────────────────────────────────────┘\n")
 
     try:
-        with ReusableTCPServer(("", PORT), Handler) as httpd:
+        with Server(("", PORT), Handler) as httpd:
             httpd.serve_forever()
     except OSError as e:
         if "Address already in use" in str(e):
