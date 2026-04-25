@@ -51,9 +51,9 @@ if __name__ == "__main__":
     print(f"  │  Ctrl+C to stop                     │")
     print(f"  └─────────────────────────────────────┘\n")
 
-    # Open browser automatically (skip with --no-open)
-    if "--no-open" not in sys.argv:
-        threading.Thread(target=open_browser, daemon=True).start()
+    # WSL: open manually in Windows browser at http://localhost:3000
+    # if "--no-open" not in sys.argv:
+    #     threading.Thread(target=open_browser, daemon=True).start()
 
     with socketserver.TCPServer(("", PORT), Handler) as httpd:
         httpd.allow_reuse_address = True
