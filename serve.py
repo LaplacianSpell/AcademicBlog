@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 Dev server for AcademicBlog
-Run: python3 serve.py
+Run:  python3 serve.py
+      python3 serve.py --port 8080
 Then open: http://localhost:3000
 """
 
@@ -9,19 +10,22 @@ import http.server
 import socketserver
 import os
 import sys
-import threading
-import webbrowser
 from pathlib import Path
 
 PORT = 3000
 ROOT = Path(__file__).parent
+
+for arg in sys.argv[1:]:
+    if arg.startswith("--port="):
+        PORT = int(arg.split("=")[1])
+    elif arg == "--port" and sys.argv.index(arg) + 1 < len(sys.argv):
+        PORT = int(sys.argv[sys.argv.index(arg) + 1])
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(ROOT), **kwargs)
 
-    # Serve .md and .jsx with correct MIME types
     def guess_type(self, path):
         if str(path).endswith(".md"):
             return "text/plain; charset=utf-8"
@@ -29,15 +33,9 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return "text/javascript; charset=utf-8"
         return super().guess_type(path)
 
-    # Suppress request logs (comment out to see them)
     def log_message(self, format, *args):
-        pass
-
-
-def open_browser():
-    import time
-    time.sleep(0.5)
-    webbrowser.open(f"http://localhost:{PORT}")
+        # Show requests so you can see what's being fetched
+        print(f"  {args[0]}  {args[1]}")
 
 
 if __name__ == "__main__":
@@ -51,13 +49,18 @@ if __name__ == "__main__":
     print(f"  │  Ctrl+C to stop                     │")
     print(f"  └─────────────────────────────────────┘\n")
 
-    # WSL: open manually in Windows browser at http://localhost:3000
-    # if "--no-open" not in sys.argv:
-    #     threading.Thread(target=open_browser, daemon=True).start()
+    class ReusableTCPServer(socketserver.TCPServer):
+        allow_reuse_address = True
 
-    with socketserver.TCPServer(("", PORT), Handler) as httpd:
-        httpd.allow_reuse_address = True
-        try:
+    try:
+        with ReusableTCPServer(("", PORT), Handler) as httpd:
             httpd.serve_forever()
-        except KeyboardInterrupt:
-            print("\n  Server stopped.")
+    except OSError as e:
+        if "Address already in use" in str(e):
+            print(f"  ✗ Port {PORT} is in use. Try:")
+            print(f"    kill $(lsof -t -i:{PORT})")
+            print(f"    python3 serve.py --port 8080\n")
+        else:
+            raise
+    except KeyboardInterrupt:
+        print("\n  Server stopped.")
