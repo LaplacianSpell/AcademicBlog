@@ -75,14 +75,12 @@ function Identity() {
           <span>EPFL</span>
         </span>
       </div>
-      <div className="id-actions">
+      <div className="links">
         <button
           onClick={() => setDark(d => !d)}
           title={dark ? "Switch to light mode" : "Switch to dark mode"}
           aria-label="Toggle dark mode"
-          style={{ fontSize: "1.1em", opacity: 0.75, transition: "opacity 0.2s" }}
-          onMouseEnter={e => e.currentTarget.style.opacity = "1"}
-          onMouseLeave={e => e.currentTarget.style.opacity = "0.75"}
+          className="id-dark-btn"
         >
           {dark ? "●" : "◐"}
         </button>

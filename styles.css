@@ -36,11 +36,16 @@
 }
 
 /* Smooth theme transition */
-body, .topnav, .stage, .blob, .scroll-mark,
+body, .topnav, .stage, .scroll-mark,
 .abstract-row, .pub, .notes-sidebar, .notes-list,
-.identity-card, .footer-quote {
-  transition: background 0.35s ease, color 0.25s ease,
+.identity, .footer-quote {
+  transition: background-color 0.35s ease, color 0.25s ease,
               border-color 0.25s ease;
+}
+
+/* Blob transitions separately so filter: blur doesn't fight it */
+.blob {
+  transition: background-color 0.5s ease;
 }
 
 * { box-sizing: border-box; }
@@ -576,6 +581,16 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   transition: all 0.2s;
 }
 .identity .links a:hover { color: var(--accent); transform: translateY(-1px); }
+.identity .links .id-dark-btn {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  color: var(--ink-soft);
+  transition: color 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+.identity .links .id-dark-btn:hover { color: var(--accent); transform: translateY(-1px); }
 
 /* ----- Footer rotating quote ----- */
 .footer-quote {
