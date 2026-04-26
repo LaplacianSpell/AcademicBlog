@@ -166,10 +166,12 @@ function App() {
               label="Dark mode"
               value={document.documentElement.getAttribute("data-theme") === "dark"}
               onChange={(v) => {
-                document.documentElement.setAttribute("data-theme", v ? "dark" : "light");
-                localStorage.setItem("theme", v ? "dark" : "light");
-                // sync identity card button state
-                if (window._darkModeSetters) window._darkModeSetters.forEach(fn => fn(v));
+                // Drive the Identity card's useDarkMode hook (single source of truth)
+                if (window._darkToggle) window._darkToggle(v);
+                else {
+                  document.documentElement.setAttribute("data-theme", v ? "dark" : "light");
+                  localStorage.setItem("theme", v ? "dark" : "light");
+                }
               }}
             />
           </window.TweakSection>
