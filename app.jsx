@@ -48,10 +48,13 @@ function App() {
   useEffect(() => {
     if (reformOnMountRef.current && window.runTitleReform) {
       reformOnMountRef.current = false;
-      window.runTitleReform().then(() => {
-        setAnimating(false);
-        animatingRef.current = false;
-      });
+      // Small delay so new page's title element is in the DOM
+      setTimeout(() => {
+        window.runTitleReform().then(() => {
+          setAnimating(false);
+          animatingRef.current = false;
+        });
+      }, 60);
     }
   }, [route, pageKey]);
 
@@ -88,9 +91,9 @@ function App() {
   }, []);
 
   const goWithFx = async (targetRoute) => {
-    // title-fx.jsx owns the isAnimating guard — if scatter returns instantly
-    // (already animating), we still navigate but skip the duplicate scatter
     if (animatingRef.current) return;
+    // Don't re-animate clicking the same page's title
+    if (targetRoute === route) return;
     animatingRef.current = true;
     setAnimating(true);
     if (window.runTitleScatter) await window.runTitleScatter();
