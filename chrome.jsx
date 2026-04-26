@@ -1,26 +1,20 @@
 /* Page chrome — top breadcrumb nav, blobs, identity card, scroll mark */
 
-/* ── Dark mode hook ──────────────────────────────────────────────────────── */
+/* ── Dark mode (minimal, no visual changes to Identity card) ─────────────── */
 function useDarkMode() {
   const [dark, setDark] = React.useState(() => {
     const saved = localStorage.getItem("theme");
     if (saved) return saved === "dark";
     return window.matchMedia("(prefers-color-scheme: dark)").matches;
   });
-
   React.useEffect(() => {
     document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
     localStorage.setItem("theme", dark ? "dark" : "light");
-    // Keep tweaks panel toggle in sync
-    if (window._setDarkFromOutside) window._setDarkFromOutside(dark);
   }, [dark]);
-
-  // Register setter so tweaks panel can drive this component
   React.useEffect(() => {
     window._darkToggle = (v) => setDark(typeof v === "boolean" ? v : (d => !d));
     return () => { window._darkToggle = null; };
   }, []);
-
   return [dark, setDark];
 }
 
@@ -52,38 +46,28 @@ function TopNav({ route, onGo }) {
         <span className="sep">/</span>
         <a
           href="https://laplacianspell.github.io/"
-          target="_blank"
-          rel="noopener"
-          style={{ color: "var(--ink-soft)", textDecoration: "none", fontSize: "inherit" }}
+          target="_blank" rel="noopener"
+          style={{ color:"var(--ink-soft)", textDecoration:"none", fontSize:"inherit" }}
         >Blog ↗</a>
       </nav>
     </header>
   );
 }
 
-/* ── Identity card ───────────────────────────────────────────────────────── */
+/* ── Identity card — exactly original layout, ◐ wired to dark mode ───────── */
 function Identity() {
-  const [dark, setDark] = useDarkMode();
+  const [, setDark] = useDarkMode();
   return (
     <div className="identity">
       <div className="av">D</div>
       <div className="who">
-        <span className="name">Di Pan</span>
-        <span className="tags">
-          <span>PHYSICS</span>
-          <span>•</span>
-          <span>EPFL</span>
-        </span>
+        Di Pan
+        <small>Physics · EPFL</small>
       </div>
       <div className="links">
-        <button
-          onClick={() => setDark(d => !d)}
-          title={dark ? "Switch to light mode" : "Switch to dark mode"}
-          aria-label="Toggle dark mode"
-          className="id-dark-btn"
-        >
-          {dark ? "●" : "◐"}
-        </button>
+        <a title="Toggle dark mode" aria-label="Toggle dark mode"
+           style={{ cursor:"pointer" }}
+           onClick={(e) => { e.preventDefault(); setDark(d => !d); }}>◐</a>
         <a href="https://github.com/LaplacianSpell" target="_blank" rel="noopener"
            title="GitHub" aria-label="GitHub">✦</a>
         <a href="/attaches/CV.pdf" target="_blank" title="CV" aria-label="CV">↗</a>
@@ -96,55 +80,41 @@ function Identity() {
 function Blobs() {
   return (
     <>
-      <div className="blob" />
-      <div className="blob bottom-right" />
+      <div className="blob"></div>
+      <div className="blob bottom-right"></div>
     </>
   );
 }
 
-/* ── Scroll position mark ────────────────────────────────────────────────── */
+/* ── Scroll mark ─────────────────────────────────────────────────────────── */
 function ScrollMark({ idx, total }) {
   return (
     <div className="scroll-mark">
-      <span className="idx">{String(idx).padStart(2, "0")}</span>
-      <div className="rule-v" />
-      <span className="tot">{String(total).padStart(2, "0")}</span>
+      <div className="num">{String(idx).padStart(2, "0")}</div>
+      <div className="line"></div>
+      <div>{String(total).padStart(2, "0")}</div>
     </div>
   );
 }
 
-/* ── Rotating footer quote ───────────────────────────────────────────────── */
+/* ── Footer quote ────────────────────────────────────────────────────────── */
 const QUOTES = [
-  "The boundary of a boundary is zero.",
-  "Physics is just geometry you haven't understood yet.",
-  "Entropy always wins in the end.",
-  "A black hole is a region of no escape — and yet Hawking found a way out.",
-  "The unreasonable effectiveness of mathematics.",
-  "Shut up and calculate.",
-  "It from bit.",
+  '"Some day in the rain." — D.P.',
+  '"The boundary of a boundary is zero."',
+  '"In quantum gravity, geometry is emergent."',
+  '"黑洞是引力的实验室."',
 ];
 
 function FooterQuote({ idx }) {
-  const q = QUOTES[idx % QUOTES.length];
-  return (
-    <div className="footer-quote">
-      <span className="dash">—</span>
-      <span className="text">{q}</span>
-    </div>
-  );
+  return <div className="footer-quote">{QUOTES[idx % QUOTES.length]}</div>;
 }
 
 /* ── Keyboard hint ───────────────────────────────────────────────────────── */
 function KbdHint() {
-  const [visible, setVisible] = React.useState(true);
-  React.useEffect(() => {
-    const t = setTimeout(() => setVisible(false), 4500);
-    return () => clearTimeout(t);
-  }, []);
-  if (!visible) return null;
   return (
-    <div className="kbd-hint" style={{ opacity: visible ? 1 : 0, transition: "opacity 0.6s" }}>
-      <span>1–4</span> navigate &nbsp;·&nbsp; <span>← →</span> cycle &nbsp;·&nbsp; <span>Esc</span> back
+    <div className="kbd-hint">
+      <span><kbd>1</kbd>–<kbd>4</kbd> jump</span>
+      <span><kbd>←</kbd><kbd>→</kbd> nav</span>
     </div>
   );
 }
