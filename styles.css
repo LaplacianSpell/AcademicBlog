@@ -15,6 +15,34 @@
   --mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, Menlo, monospace;
 }
 
+
+/* ── Dark theme ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] {
+  --bg:        #0f0f0f;
+  --ink:       #e8e0d8;
+  --ink-soft:  #b0a89e;
+  --ink-mute:  #6e6560;
+  --ink-faint: #3a3530;
+  --rule:      #242018;
+  --blob:      #2a1a1a;
+  --blob-2:    #221510;
+  --card:      #181410;
+  /* accent stays the same — crimson works on dark too */
+}
+
+[data-theme="dark"] body {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+/* Smooth theme transition */
+body, .topnav, .stage, .blob, .scroll-mark,
+.abstract-row, .pub, .notes-sidebar, .notes-list,
+.identity-card, .footer-quote {
+  transition: background 0.35s ease, color 0.25s ease,
+              border-color 0.25s ease;
+}
+
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 body {

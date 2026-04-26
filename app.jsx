@@ -161,6 +161,18 @@ function App() {
 
       {window.TweaksPanel && (
         <window.TweaksPanel title="Tweaks">
+          <window.TweakSection label="Theme">
+            <window.TweakToggle
+              label="Dark mode"
+              value={document.documentElement.getAttribute("data-theme") === "dark"}
+              onChange={(v) => {
+                document.documentElement.setAttribute("data-theme", v ? "dark" : "light");
+                localStorage.setItem("theme", v ? "dark" : "light");
+                // sync identity card button state
+                if (window._darkModeSetters) window._darkModeSetters.forEach(fn => fn(v));
+              }}
+            />
+          </window.TweakSection>
           <window.TweakSection label="Color">
             <window.TweakColor label="Accent (dropcap)" value={vals.accent} onChange={(v) => setVal("accent", v)} />
             <window.TweakColor label="Blob (corner)"    value={vals.blob}   onChange={(v) => setVal("blob", v)} />

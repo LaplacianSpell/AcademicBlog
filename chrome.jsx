@@ -38,6 +38,7 @@ function TopNav({ route, onGo }) {
 }
 
 function Identity() {
+  const [dark, setDark] = useSharedDarkMode();
   return (
     <div className="identity">
       <div className="av">D</div>
@@ -46,7 +47,7 @@ function Identity() {
         <small>Physics · EPFL</small>
       </div>
       <div className="links">
-        <a href="https://github.com/LaplacianSpell" target="_blank" title="GitHub" aria-label="GitHub">◐</a>
+        <button onClick={() => setDark(d => !d)} title="Toggle dark mode" aria-label="Toggle dark mode" style={{fontFamily:"inherit",fontSize:"inherit",color:"inherit",cursor:"pointer"}}>{dark ? "●" : "◐"}</button>
         <a href="mailto:laplacianspell@gmail.com" title="Email" aria-label="Email">✦</a>
         <a href="/attaches/CV.pdf" target="_blank" title="CV" aria-label="CV">↗</a>
       </div>

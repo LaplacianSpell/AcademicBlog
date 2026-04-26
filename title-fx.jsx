@@ -26,10 +26,10 @@
   const FLOAT_AFTER    = 900;   // ms petals just float before scatter resolves
   const SCATTER_TOTAL  = SHAKE_DUR + 2400;
 
-  const CONVERGE_LERP  = 0.055; // lower = slower convergence
+  const CONVERGE_LERP  = 0.032; // lower = slower convergence
   const ARRIVE_DIST    = 5;
-  const REFORM_STAG    = 75;    // ms between each letter appearing
-  const REFORM_TAIL    = 400;
+  const REFORM_STAG    = 95;    // ms between each letter appearing
+  const REFORM_TAIL    = 550;
 
   /* ── Petal look ─────────────────────────────────────────────────────── */
   const PETAL_COLORS = [
@@ -38,30 +38,18 @@
   ];
   const PETAL_SIZE = 28;  // px — big enough to see clearly
 
-  // Five-petal cherry blossom, notched tips
+  // Single cherry blossom petal (two overlapping ellipses, rounded tip)
   function petalSVG() {
-    const fill  = PETAL_COLORS[Math.floor(Math.random() * PETAL_COLORS.length)];
-    const fill2 = PETAL_COLORS[Math.floor(Math.random() * PETAL_COLORS.length)];
-    const rot   = Math.random() * 360;
-    // Build 5 petals around center
-    const petals = [];
-    for (let k = 0; k < 5; k++) {
-      const a = (k * 72 + rot) * Math.PI / 180;
-      const px = 16 + Math.cos(a) * 9;
-      const py = 16 + Math.sin(a) * 9;
-      const lx = 16 + Math.cos(a - 0.5) * 5.5;
-      const ly = 16 + Math.sin(a - 0.5) * 5.5;
-      const rx = 16 + Math.cos(a + 0.5) * 5.5;
-      const ry = 16 + Math.sin(a + 0.5) * 5.5;
-      // Notch at tip
-      const nx = 16 + Math.cos(a) * 7.5;
-      const ny = 16 + Math.sin(a) * 7.5;
-      petals.push(`<path d="M 16 16 L ${lx.toFixed(1)} ${ly.toFixed(1)} Q ${px.toFixed(1)} ${py.toFixed(1)} ${nx.toFixed(1)} ${ny.toFixed(1)} Q ${px.toFixed(1)} ${py.toFixed(1)} ${rx.toFixed(1)} ${ry.toFixed(1)} Z"
-        fill="${fill}" opacity="0.88" stroke="${fill2}" stroke-width="0.4"/>`);
-    }
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="${PETAL_SIZE}" height="${PETAL_SIZE}">
-      ${petals.join('\n')}
-      <circle cx="16" cy="16" r="3" fill="#fff9" stroke="${fill2}" stroke-width="0.5"/>
+    const c1  = PETAL_COLORS[Math.floor(Math.random() * PETAL_COLORS.length)];
+    const c2  = PETAL_COLORS[Math.floor(Math.random() * PETAL_COLORS.length)];
+    const rot = (Math.random() * 40 - 20).toFixed(1);
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 36" width="${PETAL_SIZE}" height="${Math.round(PETAL_SIZE*1.28)}">
+      <ellipse cx="14" cy="21" rx="10" ry="15" fill="${c1}" opacity="0.92"
+        transform="rotate(${rot} 14 18)"/>
+      <ellipse cx="14" cy="15" rx="6"  ry="10" fill="${c2}" opacity="0.50"
+        transform="rotate(${(-rot*0.5).toFixed(1)} 14 18)"/>
+      <ellipse cx="14" cy="7"  rx="2.5" ry="3.5" fill="${c1}" opacity="0.35"
+        transform="rotate(${rot} 14 18)"/>
     </svg>`;
   }
 
