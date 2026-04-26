@@ -55,6 +55,18 @@ function App() {
     }
   }, [route, pageKey]);
 
+  // Safety valve: if reform never fires (e.g. no title on page),
+  // unlock after a timeout so the site doesn't get stuck
+  useEffect(() => {
+    if (animatingRef.current) {
+      const t = setTimeout(() => {
+        animatingRef.current = false;
+        setAnimating(false);
+      }, 2200);
+      return () => clearTimeout(t);
+    }
+  }, [route]);
+
   // hashchange is the single source of truth for all navigation
   useEffect(() => {
     function onHashChange() {
@@ -76,6 +88,8 @@ function App() {
   }, []);
 
   const goWithFx = async (targetRoute) => {
+    // title-fx.jsx owns the isAnimating guard — if scatter returns instantly
+    // (already animating), we still navigate but skip the duplicate scatter
     if (animatingRef.current) return;
     animatingRef.current = true;
     setAnimating(true);
